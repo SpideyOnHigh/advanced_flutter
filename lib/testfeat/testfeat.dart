@@ -1,4 +1,6 @@
+import 'package:advanced_flutter/presentation/resources/assets_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(MaterialApp(home: TestPage()));
 
@@ -43,7 +45,17 @@ class _TestPageState extends State<TestPage> {
         controller: pageController,
         physics: ClampingScrollPhysics(),
         children: [
-          Container(color: Colors.lightBlue),
+     
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: GestureDetector(
+              child: SizedBox(
+                height: 20,
+                width: 20,
+                child: SvgPicture.asset(ImageAssets.leftArrowIc),
+              ),
+            ),
+          ),
           Container(color: Colors.indigo),
           Container(color: Colors.cyan),
         ],
