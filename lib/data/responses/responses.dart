@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'responses.g.dart';
 
 // run "flutter clean" first and add line "part 'responses.g.dart' "
-// before run "flutter pub run build_runner build --delete-conflicting-outputs"
+// before run "flutter pub run build_runner build --delete-conflicting-outputs" ..after creating constructor
 
 
 @JsonSerializable()
@@ -52,16 +52,17 @@ class ContactsResponse{
 }
 
 @JsonSerializable()
-class AuthenticationResposne extends BaseResponse{
+class AuthenticationResponse extends BaseResponse{
   @JsonKey(name:"customer")
-  CustomerResponse? customer;
+  CustomerResponse customer;
   @JsonKey(name:"contacts")
-  ContactsResponse? contacts;
+  ContactsResponse contacts;
 
-  AuthenticationResposne(this.contacts,this.customer);
+  AuthenticationResponse(this.contacts,this.customer);
 
+  //run command to autogenerate returns
   //from JSON
-  factory AuthenticationResposne.fromJson(Map<String,dynamic> json) => _$AuthenticationResposneFromJson(json);
+  factory AuthenticationResponse.fromJson(Map<String,dynamic> json) => _$AuthenticationResposneFromJson(json);
 
   //toJson
   Map<String,dynamic> toJson() => _$AuthenticationResposneToJson(this);

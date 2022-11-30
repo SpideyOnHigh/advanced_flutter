@@ -44,21 +44,17 @@ Map<String, dynamic> _$ContactsResponseToJson(ContactsResponse instance) =>
       'email': instance.email,
     };
 
-AuthenticationResposne _$AuthenticationResposneFromJson(
+AuthenticationResponse _$AuthenticationResposneFromJson(
         Map<String, dynamic> json) =>
-    AuthenticationResposne(
-      json['contacts'] == null
-          ? null
-          : ContactsResponse.fromJson(json['contacts'] as Map<String, dynamic>),
-      json['customer'] == null
-          ? null
-          : CustomerResponse.fromJson(json['customer'] as Map<String, dynamic>),
+    AuthenticationResponse(
+      ContactsResponse.fromJson(json['contacts'] as Map<String, dynamic>),
+      CustomerResponse.fromJson(json['customer'] as Map<String, dynamic>),
     )
       ..status = json['status'] as int?
       ..message = json['message'] as String?;
 
 Map<String, dynamic> _$AuthenticationResposneToJson(
-        AuthenticationResposne instance) =>
+        AuthenticationResponse instance) =>
     <String, dynamic>{
       'status': instance.status,
       'message': instance.message,

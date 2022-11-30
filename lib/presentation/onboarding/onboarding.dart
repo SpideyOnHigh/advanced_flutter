@@ -111,7 +111,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                  child: SvgPicture.asset(ImageAssets.leftArrowIc),
                ),
                onTap: (){
-                 _pageController.animateToPage(_viewModel.goPrevious(), duration: Duration(milliseconds: DurationConstant.d300), curve: Curves.ease);
+                   _pageController.animateToPage(_viewModel.goPrevious(), duration: Duration(milliseconds: DurationConstant.d300), curve: Curves.ease);
                },
              ),
            ),
