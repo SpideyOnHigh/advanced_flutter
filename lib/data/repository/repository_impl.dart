@@ -4,15 +4,17 @@ import 'package:advanced_flutter/data/network/error_handler.dart';
 import 'package:advanced_flutter/data/network/failure.dart';
 import 'package:advanced_flutter/data/network/network_info.dart';
 import 'package:advanced_flutter/data/request/request.dart';
-import 'package:advanced_flutter/domain/model.dart';
-import 'package:advanced_flutter/domain/repository.dart';
+import 'package:advanced_flutter/domain/model/model.dart';
+import 'package:advanced_flutter/domain/repository/repository.dart';
 import 'package:dartz/dartz.dart';
 
 class RepositoryImpl extends Repository{
   RemoteDataSource _remoteDataSource;
   NetworkInfo _networkInfo;
 
+  //constructor
   RepositoryImpl(this._remoteDataSource,this._networkInfo);
+
   @override
   Future<Either<Failure, Authentication>> login(LoginRequest loginRequest) async{
     //before calling the API we need to check for internet connection
@@ -25,6 +27,7 @@ class RepositoryImpl extends Repository{
         if(response.status == ApiInternalStatus.SUCCESS){
           //return data
           //return right side data
+          //convert it using toDomain (model)
           return Right(response.toDomain());
         }
 

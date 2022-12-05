@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:advanced_flutter/presentation/base/baseviewmodel.dart';
 import 'package:advanced_flutter/presentation/resources/strings_manager.dart';
 
-import '../../domain/model.dart';
+import '../../domain/model/model.dart';
 import '../resources/assets_manager.dart';
 
 class OnBoardingViewModel extends BaseViewModel with OnBoardingViewModelInputs,OnBoardingViewModelOutputs{
@@ -31,8 +31,8 @@ class OnBoardingViewModel extends BaseViewModel with OnBoardingViewModelInputs,O
 
   @override
   int goNext() {
-    int previousIndex = ++currentIndex;
-    if(previousIndex >= _list.length){
+    int nextIndex = ++currentIndex;
+    if(nextIndex >= _list.length){
       currentIndex = 0; //infinite loop
     }
     return currentIndex;
@@ -81,6 +81,7 @@ class OnBoardingViewModel extends BaseViewModel with OnBoardingViewModelInputs,O
 }
 
 //input means orders that our viewmodel recieves from our view
+//actions
 abstract class OnBoardingViewModelInputs{
 
   void goNext(); //when user clicks on right arrow or swipe right

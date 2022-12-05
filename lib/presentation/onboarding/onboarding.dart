@@ -7,7 +7,7 @@ import 'package:advanced_flutter/presentation/resources/values_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../domain/model.dart';
+import '../../domain/model/model.dart';
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({Key? key}) : super(key: key);
@@ -38,6 +38,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
     return StreamBuilder<SliderViewObject>(
         stream: _viewModel.outputSliderViewObject,
         builder: (context,snapShot){
+          print(snapShot);
           return  _getContentWidget(snapShot.data);
         }
     );
