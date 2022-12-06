@@ -11,4 +11,5 @@ static const String rightArrowIc = "$IMAGR_PATH/right_arrow_ic.svg";
 static const String leftArrowIc = "$IMAGR_PATH/left_arrow_ic.svg";
 static const String solidCircleIc = "$IMAGR_PATH/solid_circle_ic.svg";
 static const String hollowCircleIc = "$IMAGR_PATH/hollow_circle_ic.svg";
+static const String loginIc = "$IMAGR_PATH/login_ic.svg";
 }
