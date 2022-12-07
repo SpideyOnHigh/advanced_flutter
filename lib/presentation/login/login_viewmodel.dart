@@ -21,7 +21,7 @@ class LoginViewModel extends BaseViewModel
   var loginObject = LoginObject("", "");
 
   //login usecase for calling api
-  LoginUseCase? _loginUseCase; //todo remove ? fromhere
+  LoginUseCase _loginUseCase;
   LoginViewModel(this._loginUseCase);
 
   //inputs
@@ -48,17 +48,17 @@ class LoginViewModel extends BaseViewModel
 
   @override
   login() async {
-    // (await _loginUseCase.execute(
-    //         LoginUseCaseInput(loginObject.userName, loginObject.password)))
-    //     .fold(
-    //         (failure) => {
-    //               //left -> failure
-    //               print(failure.message)
-    //             },
-    //         (data) => {
-    //               //right -> success
-    //               print(data.customer.name)
-    //             });
+    (await _loginUseCase.execute(
+            LoginUseCaseInput(loginObject.userName, loginObject.password)))
+        .fold(
+            (failure) => {
+                  //left -> failure
+                  print(failure.message)
+                },
+            (data) => {
+                  //right -> success
+                  print(data.customer.name)
+                });
   }
 
   //adding password to sink(inputing through sink)

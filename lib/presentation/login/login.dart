@@ -1,10 +1,10 @@
+
 import 'package:advanced_flutter/presentation/login/login_viewmodel.dart';
 import 'package:advanced_flutter/presentation/resources/color_manager.dart';
 import 'package:advanced_flutter/presentation/resources/strings_manager.dart';
 import 'package:advanced_flutter/presentation/resources/values_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
+import '../../app/di.dart';
 import '../resources/assets_manager.dart';
 import '../resources/routes_manager.dart';
 
@@ -16,8 +16,21 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  LoginViewModel _loginViewModel =
-      LoginViewModel(null); //todo add loginusecase here
+
+
+  //TODO:TO REMOVE THIS KIND OF DEPENDENCY WE USE DEPENDENCY INJECTION
+  // SharedPreferences _sharedPreferences =  SharedPreferences.getInstance();
+  // AppPreferences _appPreferences = AppPreferences(_sharedPreferences);
+  // DioFactory dio = DioFactory(_appPreferences);
+  // AppServiceClient _appServiceClient = AppServiceClient(dio.getDio())
+  // RemoteDataSource _remoteDataSource = RemoteDataSourceImplementer(_appServiceClient)
+  // Repository _repository = RepositoryImpl(_remoteDataSource, _networkInfo);
+  // LoginUseCase _loginUseCase = LoginUseCase(_repository);
+
+  //getting instance of viewModel directly from GetIt
+  //it will magically get it all the required insatances
+  //here we needed UseCase Insatnce
+  final LoginViewModel _loginViewModel = instance<LoginViewModel>();
 
   //controller to check if user has entered something or not
   TextEditingController userNameController = TextEditingController();
