@@ -1,21 +1,29 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:advanced_flutter/app/app_prefs.dart';
+import 'package:advanced_flutter/app/di.dart';
 import 'package:advanced_flutter/domain/usecase/login_usecase.dart';
 import 'package:advanced_flutter/presentation/base/baseviewmodel.dart';
 import 'package:advanced_flutter/presentation/common/freezed_data_classes.dart';
+import 'package:advanced_flutter/presentation/common/state_renderer/state_renderer.dart';
+import 'package:advanced_flutter/presentation/common/state_renderer/state_renderer_impl.dart';
 import 'package:flutter/material.dart';
 
 class LoginViewModel extends BaseViewModel
     with LoginViewModelInputs, LoginViewModelOutputs {
   //Adding Stream Controller
-  //broadcast means many subscribers can listen to one string
+  //broadcast means many subscribers can listen to one stream
   StreamController _userNameStreamController =
       StreamController<String>.broadcast();
   StreamController _passwordStreamController =
       StreamController<String>.broadcast();
   StreamController _isALlInputValidStreamController =
       StreamController<void>.broadcast();
+  StreamController _isUserLoggedInSuccessFullyStreamController =
+      StreamController<bool>();
+
+  AppPreferences _appPreferences = instance<AppPreferences>();
 
   //loginObject data class
   var loginObject = LoginObject("", "");
@@ -30,11 +38,13 @@ class LoginViewModel extends BaseViewModel
     _userNameStreamController.close();
     _passwordStreamController.close();
     _isALlInputValidStreamController.close();
+    _isUserLoggedInSuccessFullyStreamController.close();
   }
 
   @override
   void start() {
-    // TODO: implement start
+    //viewModel tells the view to load the content state
+    inputState.add(ContentState());
   }
 
   @override
@@ -47,18 +57,35 @@ class LoginViewModel extends BaseViewModel
   Sink get inputIsAllInputsValid => _isALlInputValidStreamController.sink;
 
   @override
+  Sink get inputisUserLoggedIn =>
+      _isUserLoggedInSuccessFullyStreamController.sink;
+
+  @override
   login() async {
+    //on click of login we have to show loading state
+    inputState.add(LoadingState(
+        stateRendererTypes: StateRendererTypes.POPUP_LOADING_STATE));
     (await _loginUseCase.execute(
             LoginUseCaseInput(loginObject.userName, loginObject.password)))
         .fold(
             (failure) => {
                   //left -> failure
-                  print(failure.message)
-                },
-            (data) => {
-                  //right -> success
-                  print(data.customer.name)
-                });
+                  //for failure we have to show error state
+                  inputState.add(ErrorState(
+                      StateRendererTypes.POPUP_ERROR_STATE, failure.message))
+                }, (data) {
+      //right ->> success
+      inputState.add(ContentState());
+
+      //Navigate to main screen after login
+      //we got success so user logged in so adding true to our loggedin checking stream
+      inputisUserLoggedIn.add(true);
+
+      //adding user logged in to shared pref so next time we
+      //don't have to see the login screen
+      //todo uncomment in final build
+      // _appPreferences.setUserLoggedIn();
+    });
   }
 
   //adding password to sink(inputing through sink)
@@ -67,7 +94,7 @@ class LoginViewModel extends BaseViewModel
     inputPassword.add(password);
     //object will be called whenever we are updating value
     loginObject =
-        loginObject.copyWith(password: password);//data class operation
+        loginObject.copyWith(password: password); //data class operation
     _isALlInputValidStreamController.add(null);
   }
 
@@ -79,7 +106,6 @@ class LoginViewModel extends BaseViewModel
     loginObject =
         loginObject.copyWith(userName: userName); //data class operation
     _isALlInputValidStreamController.add(null);
-
   }
 
   //outputs
@@ -95,6 +121,10 @@ class LoginViewModel extends BaseViewModel
   Stream<bool> get outputsIsAllInputsValid =>
       _isALlInputValidStreamController.stream.map((_) => _isAllInputsValid());
 
+  @override
+  Stream get outputIsUserLoggedIn =>
+      _isUserLoggedInSuccessFullyStreamController.stream;
+
   //private functions
   //validating username and password because we have to return in bool
 
@@ -106,8 +136,9 @@ class LoginViewModel extends BaseViewModel
     return userName.isNotEmpty;
   }
 
- bool _isAllInputsValid() {
-    return _isUserNameValid(loginObject.userName) && _isPasswordValid(loginObject.password);
+  bool _isAllInputsValid() {
+    return _isUserNameValid(loginObject.userName) &&
+        _isPasswordValid(loginObject.password);
   }
 }
 
@@ -134,6 +165,9 @@ abstract class LoginViewModelInputs {
   //to disable or enable login button if username and password is valid its enable otherwise disabled
   //we are not passing any input
   Sink get inputIsAllInputsValid;
+
+  //to navigate to main screen after logging in successfully
+  Sink get inputisUserLoggedIn;
 }
 
 abstract class LoginViewModelOutputs {
@@ -146,6 +180,9 @@ abstract class LoginViewModelOutputs {
   //to disable or enable login button if username and password is valid its enable otherwise disabled
   //outputs true or false
   Stream<bool> get outputsIsAllInputsValid;
+
+  //
+  Stream get outputIsUserLoggedIn;
 }
 
 //NOTE: TO UPDATE THE USERNAME AND PASSWORD WE NEED FREEZED BECOZ WE DONT HAVE DATA CLASSES IN DART. USER CAN CHANGE

@@ -93,6 +93,10 @@ extension FlowStateExtension on FlowState{
         }
       }
       case ErrorState:{
+        //if we got error after loading
+        //we have to close the loading popup
+        dismissDialog(context);
+
         if(getStateRendererTypes() == StateRendererTypes.POPUP_ERROR_STATE){
 
           //showing popup dialog
@@ -112,6 +116,9 @@ extension FlowStateExtension on FlowState{
             retryActionFunction: retryActionFunction);
       }
       case ContentState:{
+
+        //Closing the popup dialog before showing any content
+        dismissDialog(context);
         return contentScreenWidget;
       }
       default:{
@@ -119,6 +126,20 @@ extension FlowStateExtension on FlowState{
       }
     }
   }
+
+  //dismiss the open dialog
+  dismissDialog(BuildContext context){
+    //checking if any dialog open
+    //if any open we will close them
+    if(isThereCurrentDialogShowing(context)){
+      Navigator.of(context,rootNavigator: true).pop(true);
+    }
+  }
+
+  //checking for popup state where there is loading dialog is open and we got the error so,
+  //handling multiple popups
+  isThereCurrentDialogShowing(BuildContext context) => ModalRoute.of(context)?.isCurrent != true;
+
   showPopUp(BuildContext context,StateRendererTypes stateRendererTypes,String message){
     WidgetsBinding.instance.addPostFrameCallback((_) => showDialog(
         context: context,
@@ -126,7 +147,6 @@ extension FlowStateExtension on FlowState{
             stateRendererTypes: stateRendererTypes,
             message: message,
             retryActionFunction: (){})));
-
   }
 
 }

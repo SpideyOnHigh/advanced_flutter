@@ -16,7 +16,7 @@ static const String loginIc = "$IMAGR_PATH/login_ic.svg";
 }
 
 class JsonAssets{
-  static const String loading = "$JSON_PATH/login_ic.json";
+  static const String loading = "$JSON_PATH/loading.json";
   static const String error = "$JSON_PATH/error.json";
   static const String empty = "$JSON_PATH/empty.json";
 

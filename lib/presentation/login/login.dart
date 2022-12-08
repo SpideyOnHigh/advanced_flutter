@@ -1,9 +1,10 @@
-
+import 'package:advanced_flutter/presentation/common/state_renderer/state_renderer_impl.dart';
 import 'package:advanced_flutter/presentation/login/login_viewmodel.dart';
 import 'package:advanced_flutter/presentation/resources/color_manager.dart';
 import 'package:advanced_flutter/presentation/resources/strings_manager.dart';
 import 'package:advanced_flutter/presentation/resources/values_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import '../../app/di.dart';
 import '../resources/assets_manager.dart';
 import '../resources/routes_manager.dart';
@@ -16,8 +17,6 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-
-
   //TODO:TO REMOVE THIS KIND OF DEPENDENCY WE USE DEPENDENCY INJECTION
   // SharedPreferences _sharedPreferences =  SharedPreferences.getInstance();
   // AppPreferences _appPreferences = AppPreferences(_sharedPreferences);
@@ -44,6 +43,15 @@ class _LoginViewState extends State<LoginView> {
         () => _loginViewModel.setUserName(userNameController.text));
     passwordController.addListener(
         () => _loginViewModel.setPassword(passwordController.text));
+    _loginViewModel.outputIsUserLoggedIn.listen((isUserLoggedIn) {
+
+      //it's a listing subscriber method so we need to have this
+      //scheduler binding
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, Routes.mainRoute);
+
+      });
+    });
   }
 
   @override
@@ -54,13 +62,22 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return _getContentWidget();
+    return StreamBuilder<FlowState>(
+      //getting stream data from viewmodel
+      stream: _loginViewModel.outputState,
+      builder: (context, snapshot) {
+        return snapshot.data?.getScreenWidget(context, _getContentWidget(), () {
+              _loginViewModel.login();
+            }) ??
+            _getContentWidget();
+      },
+    );
   }
 
   Widget _getContentWidget() {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: AppPadding.p100),
+        padding: const EdgeInsets.only(top: AppPadding.p100),
         color: ColorManager.white,
         child: SingleChildScrollView(
           child: Form(
@@ -108,9 +125,9 @@ class _LoginViewState extends State<LoginView> {
                     },
                   ),
                 ),
-                SizedBox(height: AppSize.s28),
+                const SizedBox(height: AppSize.s28),
                 Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         left: AppPadding.p28, right: AppPadding.p28),
                     child: StreamBuilder<bool>(
                       stream: _loginViewModel.outputsIsAllInputsValid,

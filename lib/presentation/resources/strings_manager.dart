@@ -23,6 +23,9 @@ class AppStrings{
   static const String loading = "Loading...";
   static const String retry_again = "Retry Agian";
   static const String ok = "ok";
+  static const String enter_email = "Enter Email Address";
+  static const String reset_pass = "Reset Password";
+  static const String didnt_received_email = "Didn’t recieve email ? Resesnd";
 
 
 
