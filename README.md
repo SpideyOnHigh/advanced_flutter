@@ -1,6 +1,7 @@
 # advanced_flutter
 
-A new Flutter project.
+This project is created when i was interning at openeyes software solutions as a part of my flutter learning
+i was watching one udemy course
 
 ## Getting Started
 
