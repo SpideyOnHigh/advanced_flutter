@@ -24,6 +24,23 @@ class LoadingState extends FlowState {
   StateRendererTypes getStateRendererTypes() => stateRendererTypes;
 }
 
+class SuccessState extends FlowState{
+  StateRendererTypes stateRendererTypes;
+  String message;
+
+  SuccessState({required this.stateRendererTypes, String? message})
+      : message = message ?? AppStrings.loading;
+
+
+  @override
+  String getMessage() => message;
+
+  @override
+  StateRendererTypes getStateRendererTypes() => stateRendererTypes;
+
+
+}
+
 //Error State (POPUP AND FULL SCREEN)
 class ErrorState extends FlowState {
   StateRendererTypes stateRendererTypes;
@@ -91,6 +108,17 @@ extension FlowStateExtension on FlowState{
               message: getMessage(),
               retryActionFunction: retryActionFunction);
         }
+      }
+      case SuccessState:{
+
+        //closing any open dialog
+        dismissDialog(context);
+        //showing popup dialog
+        showPopUp(context, getStateRendererTypes(), getMessage());
+
+        //returning the content of ui
+        return contentScreenWidget;
+
       }
       case ErrorState:{
         //if we got error after loading

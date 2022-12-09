@@ -4,6 +4,11 @@ import 'package:advanced_flutter/data/responses/responses.dart';
 
 abstract class RemoteDataSource{
    Future<AuthenticationResponse> login(LoginRequest loginRequest);
+   //as we have only one param we don't need to create Request class
+   //here i have created for understanding
+   Future<ForgotPassEmailResponse> forgotPass(ForgotPassRequest forgotPassRequest);
+
+   Future<AuthenticationResponse> register(RegisterRequest registerRequest);
 }
 
 class RemoteDataSourceImplementer implements RemoteDataSource{
@@ -14,6 +19,16 @@ class RemoteDataSourceImplementer implements RemoteDataSource{
   Future<AuthenticationResponse> login(LoginRequest loginRequest) async{
     return await _appServiceClient.login(loginRequest.email,loginRequest.password,loginRequest.imei,loginRequest.deviceType);
 
+  }
+
+  @override
+  Future<ForgotPassEmailResponse> forgotPass(ForgotPassRequest forgotPassRequest) async{
+   return await _appServiceClient.forgotPass(forgotPassRequest.email);
+  }
+
+  @override
+  Future<AuthenticationResponse> register(RegisterRequest registerRequest) async {
+  return await _appServiceClient.register(registerRequest.countryMobileCode, registerRequest.username, registerRequest.email, registerRequest.password, registerRequest.mobileNumber, registerRequest.profilePicture);
   }
 
 

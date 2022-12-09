@@ -9,4 +9,8 @@ abstract class Repository {
   //we have use Authentication instead of AuthenticationResponse because e have Mapped Data toDomain (Model)
 
   Future<Either<Failure, Authentication>> login(LoginRequest loginRequest);
+
+  Future<Either<Failure, Authentication>> register(RegisterRequest registerRequest);
+
+  Future<Either<Failure,ForgotPassWordEmail>> forgotPass(ForgotPassRequest forgotPassRequest);
 }

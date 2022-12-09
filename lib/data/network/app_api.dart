@@ -19,4 +19,23 @@ abstract class AppServiceClient {
     @Field("imei") String imei,
     @Field("deviceType") String deviceType,
   );
+
+  //post method for forgot pass
+  @POST("/customers/forgotpass")
+  Future<ForgotPassEmailResponse> forgotPass(
+    @Field("email") String email,
+  );
+
+  //post method for register
+  @POST("/customers/register")
+  Future<AuthenticationResponse> register(
+    @Field("country_mobile_code") String countryMobileCode,
+    @Field("username") String username,
+    @Field("email") String email,
+    @Field("password") String password,
+    @Field("mobile_number") String mobileNumber,
+    @Field("profile_picture") String profilePicture,
+  );
 }
+
+

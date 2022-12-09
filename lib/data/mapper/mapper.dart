@@ -30,3 +30,9 @@ extension AuthenticationResponseMapper on AuthenticationResponse{
     return Authentication(customer.toDomain(),contacts.toDomain());
   }
 }
+
+extension ForgotPassWoredEmailResponseMapper on ForgotPassEmailResponse{
+  ForgotPassWordEmail toDomain(){
+    return ForgotPassWordEmail(this.support?.orEmpty() ?? EMPTY);
+  }
+}

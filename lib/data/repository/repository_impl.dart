@@ -51,4 +51,73 @@ class RepositoryImpl extends Repository{
 
   }
 
+  @override
+  Future<Either<Failure, ForgotPassWordEmail>> forgotPass(ForgotPassRequest forgotPassRequest) async {
+    //before calling the API we need to check for internet connection
+    if(await _networkInfo.isConnected){
+      try{
+        //its safe to call API
+        final response = await _remoteDataSource.forgotPass(forgotPassRequest);
+
+        //check if response's code for success and failure
+        if(response.status == ApiInternalStatus.SUCCESS){
+          //return data
+          //return right side data
+          //convert it using toDomain (model)
+          return Right(response.toDomain());
+        }
+
+        //business logic error IT'S APIS INTERNAL STATUS ERROR
+        else{
+          return Left(Failure(response.status?? ApiInternalStatus.FAILURE,response.message?? ResponseMessage.DEFAULT));
+        }
+
+      }
+      catch(error){
+        return(Left(ErrorHandler.handle(error).failure));
+      }
+
+    }
+    else{
+      //return internet connection error
+      return Left(Failure(ResponseCode.NO_INTERNET_CONNECTION, ResponseMessage.NO_INTERNET_CONNECTION));
+
+    }
+  }
+
+  @override
+  Future<Either<Failure, Authentication>> register(RegisterRequest registerRequest) async {
+    //before calling the API we need to check for internet connection
+    if(await _networkInfo.isConnected){
+      try{
+        //its safe to call API
+        final response = await _remoteDataSource.register(registerRequest);
+
+        //check if response's code for success and failure
+        if(response.status == ApiInternalStatus.SUCCESS){
+          //return data
+          //return right side data
+          //convert it using toDomain (model)
+          return Right(response.toDomain());
+        }
+
+        //business logic error IT'S APIS INTERNAL STATUS ERROR
+        else{
+          return Left(Failure(response.status?? ApiInternalStatus.FAILURE,response.message?? ResponseMessage.DEFAULT));
+        }
+
+      }
+      catch(error){
+        return(Left(ErrorHandler.handle(error).failure));
+      }
+
+    }
+    else{
+      //return internet connection error
+      return Left(Failure(ResponseCode.NO_INTERNET_CONNECTION, ResponseMessage.NO_INTERNET_CONNECTION));
+
+    }
+
+  }
+
 }

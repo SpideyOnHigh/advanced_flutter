@@ -1,6 +1,10 @@
+import 'dart:html';
+import 'dart:ui';
+
 import 'package:json_annotation/json_annotation.dart';
 part 'responses.g.dart';
 
+//first step : add response
 // run "flutter clean" first and add line "part 'responses.g.dart' "
 // before run "flutter pub run build_runner build --delete-conflicting-outputs" ..after creating constructor
 
@@ -67,3 +71,21 @@ class AuthenticationResponse extends BaseResponse{
   //toJson
   Map<String,dynamic> toJson() => _$AuthenticationResponseToJson(this);
 }
+
+//response that we get from ForgotPass api
+@JsonSerializable()
+class ForgotPassEmailResponse extends BaseResponse{
+
+  @JsonKey(name: "support")
+  String? support;
+  ForgotPassEmailResponse(this.support);
+
+  //from JSON
+  factory ForgotPassEmailResponse.fromJson(Map<String,dynamic> json) => _$ForgotPassEmailResponseFromJson(json);
+
+  //toJson
+  Map<String,dynamic> toJson() => _$ForgotPassEmailResponseToJson(this);
+
+
+}
+

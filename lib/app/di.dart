@@ -5,7 +5,9 @@ import 'package:advanced_flutter/data/network/dio_factory.dart';
 import 'package:advanced_flutter/data/network/network_info.dart';
 import 'package:advanced_flutter/data/repository/repository_impl.dart';
 import 'package:advanced_flutter/domain/repository/repository.dart';
+import 'package:advanced_flutter/domain/usecase/forgot_pass_usecase.dart';
 import 'package:advanced_flutter/domain/usecase/login_usecase.dart';
+import 'package:advanced_flutter/presentation/forgot_password/forgot_password_viewmodel.dart';
 import 'package:advanced_flutter/presentation/login/login_viewmodel.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';
@@ -47,6 +49,13 @@ Future<void> initAppModule() async{
   instance.registerLazySingleton<Repository>(() => RepositoryImpl(instance(), instance()));
 
 }
+//confusion between lazyinstance and factory ??
+// Singleton means one instance per the project, so we are going to use it many times in many places,
+// for example shared preferences we need the instance in many places so its better to make it single tone,
+//     and factory means when I call the instance so create new instance of this class,
+// let's say we have login use case so we only use it inside login page so no need to create singlton '
+// 'so we will use provider which means provide a new instance when we need the instance,
+
 
 initLoginModule(){
   //we are registering as Factory so everytime we get new instance of it.
@@ -56,4 +65,8 @@ initLoginModule(){
     instance.registerFactory<LoginViewModel>(() => LoginViewModel(instance()));
   }
 
+  if(!GetIt.I.isRegistered<ForgotPassUseCase>()){
+    instance.registerFactory<ForgotPassUseCase>(() => ForgotPassUseCase(instance()));
+    instance.registerFactory<ForgotPasswordViewModel>(() => ForgotPasswordViewModel(instance()));
+  }
 }

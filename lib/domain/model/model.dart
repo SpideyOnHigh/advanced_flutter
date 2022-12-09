@@ -40,3 +40,9 @@ class DeviceInfo{
 
   DeviceInfo(this.name,this.identifier,this.version);
 }
+
+class ForgotPassWordEmail{
+  String support;
+
+  ForgotPassWordEmail(this.support);
+}

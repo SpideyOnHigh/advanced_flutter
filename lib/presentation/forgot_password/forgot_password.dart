@@ -1,3 +1,6 @@
+import 'package:advanced_flutter/app/di.dart';
+import 'package:advanced_flutter/presentation/common/state_renderer/state_renderer_impl.dart';
+import 'package:advanced_flutter/presentation/forgot_password/forgot_password_viewmodel.dart';
 import 'package:advanced_flutter/presentation/resources/assets_manager.dart';
 import 'package:advanced_flutter/presentation/resources/color_manager.dart';
 import 'package:advanced_flutter/presentation/resources/styles_manager.dart';
@@ -15,10 +18,36 @@ class ForgotPasswordView extends StatefulWidget {
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   final formKey = GlobalKey();
+
+  //controller to check if user has entered something or not
   TextEditingController emailController = TextEditingController();
+
+  final ForgotPasswordViewModel _forgotPasswordViewModel = instance<ForgotPasswordViewModel>();
+
+  _bind(){
+    _forgotPasswordViewModel.start();
+    emailController.addListener(() =>
+        _forgotPasswordViewModel.setEmail(emailController.text));
+  }
+
+  @override
+  void initState() {
+    _bind();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder<FlowState>(
+        stream: _forgotPasswordViewModel.outputState,
+        builder: (context,snapshot){
+          return snapshot.data?.getScreenWidget(context, _getContentWidget(), (){}) ??
+          _getContentWidget();
+        }
+    );
+  }
+
+  Widget _getContentWidget(){
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -30,23 +59,36 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 children: [
                   Image.asset(ImageAssets.splashLogo),
                   const SizedBox(height: AppSize.s28,),
-                  TextFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      hintText: AppStrings.enter_email,
-                    ),
+                  StreamBuilder<bool>(
+                      stream: _forgotPasswordViewModel.outputIsEmailValid,
+                      builder: (context,snapShot) {
+                        return TextFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                              hintText: AppStrings.enter_email,
+                              errorText: (snapShot.data ?? true) ? null : AppStrings.emailError
+                          ),
+                        );
+                      }
                   ),
                   const SizedBox(height: AppSize.s28,),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(onPressed: (){},
-                        child: const Text(AppStrings.reset_pass)
-                    ),
+                  StreamBuilder(
+                      stream: _forgotPasswordViewModel.outputIsEmailValid,
+                      builder: (context,snapshot) {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(onPressed: (snapshot.data ?? true) ? (){
+                            _forgotPasswordViewModel.forgotPass();
+                          }:  null,
+                              child: const Text(AppStrings.reset_pass)
+                          ),
+                        );
+                      }
                   ),
                   const SizedBox(height: AppSize.s8,),
                   Text(AppStrings.didnt_received_email,
-                  style: getRegularStyle(color: ColorManager.primary),)
+                    style: getRegularStyle(color: ColorManager.primary),)
                 ],
               ),
             ),
@@ -54,5 +96,10 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    _forgotPasswordViewModel.dispose();
+    super.dispose();
   }
 }

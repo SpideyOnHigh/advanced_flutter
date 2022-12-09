@@ -35,6 +35,9 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  //to show the eye button by returning bool value(state depend)
+  bool _isObscure = true;
+
   final formKey = GlobalKey<FormState>();
 
   _bind() {
@@ -44,12 +47,10 @@ class _LoginViewState extends State<LoginView> {
     passwordController.addListener(
         () => _loginViewModel.setPassword(passwordController.text));
     _loginViewModel.outputIsUserLoggedIn.listen((isUserLoggedIn) {
-
       //it's a listing subscriber method so we need to have this
       //scheduler binding
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, Routes.mainRoute);
-
       });
     });
   }
@@ -115,7 +116,20 @@ class _LoginViewState extends State<LoginView> {
                       return TextFormField(
                         controller: passwordController,
                         keyboardType: TextInputType.visiblePassword,
+                        obscureText: _isObscure,
                         decoration: InputDecoration(
+                            suffixIcon: IconButton(
+
+                                onPressed: (){
+                                  setState(() {
+                                    _isObscure = !_isObscure;
+                                  });
+                                },
+                                icon: Icon(
+                                  _isObscure
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                )),
                             hintText: AppStrings.password,
                             labelText: AppStrings.password,
                             errorText: (snapshot.data ?? true)

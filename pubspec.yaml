@@ -36,6 +36,8 @@ dependencies:
   analyzer: ^4.4.0
   dio: ^4.0.6
   json_annotation: ^4.6.0
+  email_validator: ^2.0.1
+
 
 
 
@@ -51,6 +53,7 @@ dependencies:
   freezed: ^2.1.0
   get_it: ^7.2.0
   lottie: ^2.0.0
+
 
 
 dev_dependencies:
@@ -95,6 +98,7 @@ flutter:
       - assets/json/empty.json
       - assets/json/error.json
       - assets/json/success.json
+      - assets/json/email.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

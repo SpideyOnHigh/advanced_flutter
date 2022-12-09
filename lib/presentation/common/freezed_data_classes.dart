@@ -8,3 +8,8 @@ class LoginObject with _$LoginObject{
   factory LoginObject(String userName,String password) = _LoginObject;
 
 }
+
+@freezed
+class ForgotPassObject with _$ForgotPassObject{
+  factory ForgotPassObject(String email) = _ForgotPassObject;
+}
